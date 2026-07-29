@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PictoBlox | Artificial Intelligence in Robotics (Robotik AI) — 39. Adım</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6c5ce7;
+      --primary-light: #a55eea;
+      --secondary: #ff7675;
+      --success: #2ecc71;
+      --warning: #f1c40f;
+      --danger: #ff7675;
+      --text: #2d3436;
+      --muted: #b2bec3;
+      --line: #dfe6e9;
+      --soft: #f9f7ff;
+    }
+
+    body {
+      font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+
+    body.dragging iframe {
+      pointer-events: none !important;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    #app,
+    #app iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    #openBtn {
+      position: fixed;
+      bottom: 70px;
+      right: 600px;
+      transform: translateX(50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #ff7675, #6c5ce7);
+      color: #fff;
+      border: 3px solid #fff;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(108, 92, 231, 0.4);
+      z-index: 50;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    #openBtn:hover {
+      transform: translateX(50%) scale(1.08);
+      box-shadow: 0 12px 30px rgba(108, 92, 231, 0.5);
+    }
+
+    #tutorial {
+      position: fixed;
+      top: 90px;
+      left: 90px;
+      width: min(450px, calc(100vw - 24px));
+      height: 560px;
+      max-height: calc(100vh - 120px);
+      background: #fff;
+      border: 4px solid #6c5ce7;
+      border-radius: 28px;
+      box-shadow: 0 20px 48px rgba(108, 92, 231, 0.25);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .resize-handle {
+      position: absolute;
+      right: -8px;
+      top: 60px;
+      bottom: 0;
+      width: 16px;
+      cursor: ew-resize;
+      z-index: 110;
+      background: transparent;
+    }
+
+    .bar {
+      background: linear-gradient(135deg, #6c5ce7, #a55eea);
+      color: #fff;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: move;
+      user-select: none;
+      border-bottom: 3px solid #ff7675;
+    }
+
+    .bar-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-title span {
+      font-size: 24px;
+      animation: wiggle 2s infinite ease-in-out;
+    }
+
+    .bar-title strong {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .bar-title small {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      opacity: .9;
+      font-weight: 400;
+    }
+
+    .close {
+      background: #ff7675;
+      border: 2px solid #fff;
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, background 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .close:hover {
+      background: #ff4757;
+      transform: scale(1.1) rotate(90deg);
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+
+    .progress-wrap {
+      padding: 16px 20px 0;
+      background: #fff;
+    }
+
+    .progress-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #6c5ce7;
+      font-weight: 600;
+    }
+
+    .progress {
+      height: 14px;
+      background: #ede9fe;
+      border-radius: 20px;
+      overflow: visible;
+      position: relative;
+      border: 2px solid #dfe6e9;
+    }
+
+    .progress>div {
+      height: 100%;
+      width: 33%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #ff7675, #6c5ce7);
+      transition: width .4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      position: relative;
+    }
+
+    .progress>div::after {
+      content: "🚀";
+      position: absolute;
+      right: -12px;
+      top: -5px;
+      font-size: 20px;
+      transition: transform 0.2s ease;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    }
+
+    .body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1 1 auto;
+    }
+
+    .slide {
+      display: none;
+    }
+
+    .slide.active {
+      display: block;
+      animation: fade .3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+
+    @keyframes fade {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      color: #fff;
+      background: #ff7675;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(255, 118, 117, 0.2);
+    }
+
+    .icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffeaa7, #ffe38f);
+      font-size: 30px;
+      box-shadow: 0 6px 15px rgba(254, 202, 87, 0.3);
+      animation: float 3s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .slide h3 {
+      font-size: 20px;
+      line-height: 1.3;
+      color: #6c5ce7;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .slide p {
+      font-size: 14px;
+      color: #2d3436;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border: 3px dashed #6c5ce7;
+      border-radius: 18px;
+      background: #faf8ff;
+      color: #6c5ce7;
+      font-size: 13.5px;
+      line-height: 1.55;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .mini-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 2px solid #dfe6e9;
+      border-radius: 16px;
+      background: #fff;
+      font-size: 13px;
+      color: #2d3436;
+      line-height: 1.5;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .mini-item:hover {
+      transform: translateY(-2px);
+      border-color: #6c5ce7;
+      box-shadow: 0 6px 12px rgba(108, 92, 231, 0.1);
+    }
+
+    .mini-item span {
+      font-size: 20px;
+      margin-top: -2px;
+    }
+
+    .mini-item b {
+      color: #6c5ce7;
+      font-weight: 700;
+    }
+
+    .book-card {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      border: 3px solid #ff7675;
+      background: linear-gradient(145deg, #fff9f9, #fff);
+      box-shadow: 0 6px 15px rgba(255, 118, 117, 0.1);
+    }
+
+    .book-card .page {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: #ff7675;
+      color: #fff;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(255, 118, 117, 0.2);
+    }
+
+    .book-card h4 {
+      font-size: 16px;
+      color: #d63031;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .book-card p {
+      font-size: 13.5px;
+      color: #2d3436;
+      line-height: 1.6;
+    }
+
+    /* Password Card Styles */
+    .password-card {
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #f8f9fe, #f1f0ff);
+      border: 3px solid #6c5ce7;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.15);
+      text-align: center;
+    }
+
+    .password-title {
+      font-weight: 700;
+      color: #6c5ce7;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    .password-box {
+      display: inline-block;
+      padding: 14px 28px;
+      background: linear-gradient(135deg, #6c5ce7, #a55eea);
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
+      border: 2px solid #fff;
+      user-select: all;
+    }
+
+    .password-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #636e72;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 20px;
+      border-top: 2px solid #f1f0ff;
+      background: #fff;
+    }
+
+    .arrow {
+      background: #f1f0ff;
+      border: none;
+      color: #6c5ce7;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .arrow:hover:not(:disabled) {
+      background: #6c5ce7;
+      color: #fff;
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(108, 92, 231, 0.2);
+    }
+
+    .arrow:disabled {
+      opacity: .4;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .dots {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #dfe6e9;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    }
+
+    .dot.active {
+      background: #ff7675;
+      width: 24px;
+      border-radius: 6px;
+      box-shadow: 0 2px 6px rgba(255, 118, 117, 0.4);
+    }
+
+    @media (max-width: 640px) {
+      #tutorial {
+        top: 12px !important;
+        left: 12px !important;
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 270px);
+      }
+
+      .body {
+        max-height: calc(100vh - 270px);
+      }
+
+      #openBtn {
+        bottom: 14px;
+        right: 400px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+    <iframe src="https://pictoblox.ai/" title="PictoBlox"></iframe>
+  </div>
+
+  <button id="openBtn" onclick="openTut()">📘 Öğrenme Rehberi</button>
+
+  <div id="tutorial" role="dialog" aria-label="Artificial Intelligence in Robotics (Robotik AI) Öğrenme Rehberi">
+    <div class="resize-handle" id="resizeHandle"></div>
+    <div class="bar" id="dragBar">
+      <div class="bar-title">
+        <span>🤖</span>
+        <div>
+          <strong>Artificial Intelligence in Robotics (Robotik AI)</strong>
+          <small>Kitap 2 Öğrenme Patikası · 39. Adım</small>
+        </div>
+      </div>
+      <button class="close" onclick="closeTut()" aria-label="Kapat">✕</button>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="stepLabel">1 / 3 · Tanıtım</span>
+        <span id="progressText">%33</span>
+      </div>
+      <div class="progress">
+        <div id="progressBar"></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <!-- 1. ADIM: Konuya genel bir giriş / tanıtım / önbilgi -->
+      <section class="slide active" data-name="Tanıtım & Önbilgi">
+        <div class="eyebrow">1. ADIM · GENEL GİRİŞ VE ÖNBİLGİ</div>
+        <div class="icon">🤖</div>
+        <h3>Robotik Sistemlerde Yapay Zeka Nasıl Kullanılır?</h3>
+        <p>Bu projede yapay zeka algoritmalarını robotik kartlar ve motor sensörleri ile entegre ederek akıllı robot kontrolü sağlayacaksın.</p>
+        <div class="mini-list">
+          <div class="mini-item">
+            <span>🤖</span>
+            <div><b>Akıllı Robot Mantığı:</b> Kamera ve mesafe sensörlerinden gelen verilerle karar verme.</div>
+          </div>
+          <div class="mini-item">
+            <span>🛣️</span>
+            <div><b>Engelden Kaçma:</b> Yapay zeka engeli tanıdığında robot yönünün değişmesi.</div>
+          </div>
+          <div class="mini-item">
+            <span>🎮</span>
+            <div><b>Kablosuz Kontrol:</b> Görsel ve sesli komutlarla robotu uzaktan yönetme.</div>
+          </div>
+        </div>
+        <div class="highlight">
+          🎯 <b>Hedef:</b> Robotik kodlama ve yapay zeka entegrasyonunun temel bloklarını kavrama.
+        </div>
+      </section>
+
+      <!-- 2. ADIM: Kitabın ilgili sayfasını referans ver -->
+      <section class="slide" data-name="Kitap Referansı">
+        <div class="eyebrow">2. ADIM · KİTAP 2 REFERANSI (SAYFA 330)</div>
+        <div class="icon">📖</div>
+        <h3>Kitabını Aç ve Uygulama Adımlarını Takip Et</h3>
+
+        <div class="book-card">
+          <div class="page">📌 Kitap 2 Referansı · Sayfa 330</div>
+          <h4>Artificial Intelligence in Robotics (Robotik AI)</h4>
+          <p>
+            Kitabının <b>Sayfa 330</b> bölümünde yer alan adımları sırayla inceleyip PictoBlox üzerinde uygulayabilirsin.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. ADIM: Şifre bölümünü yaz -->
+      <section class="slide" data-name="Bölüm Şifresi">
+        <div class="eyebrow">3. ADIM · BÖLÜM ŞİFRESİ</div>
+        <h3>Proje Tamamlama Şifresi</h3>
+
+        <div class="password-card">
+          <div class="password-title">🔒 39. Adım Tamamlama Şifresi</div>
+          <div class="password-box">robotics</div>
+          <p class="password-note">Bu şifreyi ana sistemdeki doğrulama alanına yazarak bölümü tamamlayabilirsiniz.</p>
+        </div>
+      </section>
+    </div>
+
+    <div class="nav">
+      <button class="arrow" id="prev" onclick="go(-1)" aria-label="Önceki">&lsaquo;</button>
+      <div class="dots" id="dots"></div>
+      <button class="arrow" id="next" onclick="go(1)" aria-label="Sonraki">&rsaquo;</button>
+    </div>
+  </div>
+
+  <script>
+    const tut = document.getElementById('tutorial');
+    const slides = document.querySelectorAll('.slide');
+    const dotsWrap = document.getElementById('dots');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const stepLabel = document.getElementById('stepLabel');
+    let cur = 0;
+
+    slides.forEach((_, i) => {
+      const d = document.createElement('div');
+      d.className = 'dot' + (i === 0 ? ' active' : '');
+      d.onclick = () => show(i);
+      dotsWrap.appendChild(d);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function show(i) {
+      cur = i;
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+      prevBtn.disabled = (i === 0);
+      nextBtn.disabled = (i === slides.length - 1);
+
+      const progress = Math.round(((i + 1) / slides.length) * 100);
+      progressBar.style.width = progress + '%';
+      progressText.textContent = '%' + progress;
+      stepLabel.textContent = `${i + 1} / ${slides.length} · ${slides[i].dataset.name}`;
+    }
+
+    function go(dir) {
+      const n = cur + dir;
+      if (n >= 0 && n < slides.length) show(n);
+    }
+
+    function openTut() {
+      tut.style.display = 'flex';
+    }
+
+    function closeTut() {
+      tut.style.display = 'none';
+    }
+
+    show(0);
+
+    const bar = document.getElementById('dragBar');
+    const resizeHandle = document.getElementById('resizeHandle');
+    let dragging = false, resizing = false;
+    let ox = 0, oy = 0, startWidth = 0, startX = 0;
+
+    bar.addEventListener('mousedown', e => {
+      if (e.target.closest('button')) return;
+      dragging = true;
+      ox = e.clientX - tut.offsetLeft;
+      oy = e.clientY - tut.offsetTop;
+      document.body.style.userSelect = 'none';
+      document.body.classList.add('dragging');
+    });
+
+    resizeHandle.addEventListener('mousedown', e => {
+      resizing = true;
+      startWidth = tut.offsetWidth;
+      startX = e.clientX;
+      document.body.style.userSelect = 'none';
+      document.body.style.cursor = 'ew-resize';
+      document.body.classList.add('dragging');
+    });
+
+    bar.addEventListener('touchstart', e => {
+      if (e.target.closest('button')) return;
+      const touch = e.touches[0];
+      dragging = true;
+      ox = touch.clientX - tut.offsetLeft;
+      oy = touch.clientY - tut.offsetTop;
+      document.body.classList.add('dragging');
+    }, { passive: true });
+
+    resizeHandle.addEventListener('touchstart', e => {
+      resizing = true;
+      startWidth = tut.offsetWidth;
+      startX = e.touches[0].clientX;
+      document.body.classList.add('dragging');
+    }, { passive: true });
+
+    document.addEventListener('mousemove', e => {
+      if (dragging) {
+        let x = e.clientX - ox;
+        let y = e.clientY - oy;
+
+        x = Math.max(0, Math.min(x, window.innerWidth - tut.offsetWidth));
+        y = Math.max(0, Math.min(y, window.innerHeight - tut.offsetHeight));
+
+        tut.style.left = x + 'px';
+        tut.style.top = y + 'px';
+      } else if (resizing) {
+        const width = startWidth + (e.clientX - startX);
+        if (width >= 280 && width <= window.innerWidth * 0.95) {
+          tut.style.width = width + 'px';
+        }
+      }
+    });
+
+    document.addEventListener('touchmove', e => {
+      if (!dragging && !resizing) return;
+      const touch = e.touches[0];
+
+      if (dragging) {
+        let x = touch.clientX - ox;
+        let y = touch.clientY - oy;
+
+        x = Math.max(0, Math.min(x, window.innerWidth - tut.offsetWidth));
+        y = Math.max(0, Math.min(y, window.innerHeight - tut.offsetHeight));
+
+        tut.style.left = x + 'px';
+        tut.style.top = y + 'px';
+      } else if (resizing) {
+        const width = startWidth + (touch.clientX - startX);
+        if (width >= 280 && width <= window.innerWidth * 0.95) {
+          tut.style.width = width + 'px';
+        }
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseup', () => {
+      dragging = false;
+      if (resizing) {
+        resizing = false;
+        document.body.style.cursor = '';
+      }
+      document.body.style.userSelect = '';
+      document.body.classList.remove('dragging');
+    });
+
+    document.addEventListener('touchend', () => {
+      dragging = false;
+      resizing = false;
+      document.body.classList.remove('dragging');
+    });
+  </script>
+</body>
+
+</html>
