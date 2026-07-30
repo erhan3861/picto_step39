@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PictoBlox | Artificial Intelligence in Robotics (Robotik AI) — 39. Adım</title>
+  <title>PictoBlox | ML with Teachable Machine — 39. Adım</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
@@ -324,204 +324,165 @@
     }
 
     .mini-item:hover {
-      transform: translateY(-2px);
-      border-color: #6c5ce7;
-      box-shadow: 0 6px 12px rgba(108, 92, 231, 0.1);
+      border-color: #a55eea;
+      transform: translateX(4px);
     }
 
     .mini-item span {
       font-size: 20px;
-      margin-top: -2px;
+      line-height: 1;
+      flex-shrink: 0;
     }
 
-    .mini-item b {
+    .mini-item strong {
       color: #6c5ce7;
-      font-weight: 700;
+      display: block;
+      margin-bottom: 2px;
     }
 
     .book-card {
       margin-top: 16px;
-      padding: 18px;
-      border-radius: 18px;
-      border: 3px solid #ff7675;
-      background: linear-gradient(145deg, #fff9f9, #fff);
-      box-shadow: 0 6px 15px rgba(255, 118, 117, 0.1);
+      padding: 24px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #a55eea, #6c5ce7);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(108, 92, 231, 0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    .book-card .page {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 10px;
-      padding: 5px 12px;
-      border-radius: 20px;
-      background: #ff7675;
-      color: #fff;
-      border: none;
-      font-size: 11px;
-      font-weight: 700;
-      box-shadow: 0 3px 8px rgba(255, 118, 117, 0.2);
+    .book-card::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
     }
 
     .book-card h4 {
-      font-size: 16px;
-      color: #d63031;
-      margin-bottom: 8px;
+      font-size: 20px;
       font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .book-card p {
       font-size: 13.5px;
-      color: #2d3436;
-      line-height: 1.6;
-    }
-
-    /* Password Card Styles */
-    .password-card {
-      margin-top: 20px;
-      padding: 24px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #f8f9fe, #f1f0ff);
-      border: 3px solid #6c5ce7;
-      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.15);
-      text-align: center;
-    }
-
-    .password-title {
-      font-weight: 700;
-      color: #6c5ce7;
-      font-size: 15px;
-      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0;
     }
 
     .password-box {
+      margin-top: 16px;
+      padding: 24px 20px;
+      border-radius: 24px;
+      background: #faf8ff;
+      border: 3px dashed #6c5ce7;
+      text-align: center;
+    }
+
+    .password-badge {
       display: inline-block;
-      padding: 14px 28px;
+      padding: 10px 24px;
       background: linear-gradient(135deg, #6c5ce7, #a55eea);
-      color: #ffffff;
+      color: #fff;
       font-size: 26px;
       font-weight: 700;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       border-radius: 16px;
-      box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
-      border: 2px solid #fff;
+      box-shadow: 0 8px 20px rgba(108, 92, 231, 0.3);
+      margin: 12px 0;
+      font-family: monospace;
       user-select: all;
     }
 
-    .password-note {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #636e72;
-      font-weight: 600;
-      line-height: 1.5;
-    }
-
-    .nav {
+    .foot {
+      padding: 16px 20px;
+      background: #fff;
+      border-top: 2px solid #dfe6e9;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 20px 20px;
-      border-top: 2px solid #f1f0ff;
-      background: #fff;
     }
 
-    .arrow {
-      background: #f1f0ff;
+    .btn {
       border: none;
-      color: #6c5ce7;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      font-size: 22px;
+      padding: 12px 22px;
+      border-radius: 50px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      gap: 6px;
+      font-family: 'Fredoka', sans-serif;
     }
 
-    .arrow:hover:not(:disabled) {
-      background: #6c5ce7;
+    .btn-secondary {
+      background: #f1f2f6;
+      color: #747d8c;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #dfe4ea;
+      color: #2f3542;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #6c5ce7, #a55eea);
       color: #fff;
-      transform: scale(1.1);
-      box-shadow: 0 6px 12px rgba(108, 92, 231, 0.2);
+      box-shadow: 0 6px 18px rgba(108, 92, 231, 0.35);
     }
 
-    .arrow:disabled {
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(108, 92, 231, 0.45);
+    }
+
+    .btn:disabled {
       opacity: .4;
-      cursor: default;
+      cursor: not-allowed;
       box-shadow: none;
-    }
-
-    .dots {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #dfe6e9;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-    }
-
-    .dot.active {
-      background: #ff7675;
-      width: 24px;
-      border-radius: 6px;
-      box-shadow: 0 2px 6px rgba(255, 118, 117, 0.4);
-    }
-
-    @media (max-width: 640px) {
-      #tutorial {
-        top: 12px !important;
-        left: 12px !important;
-        width: calc(100vw - 24px);
-        max-height: calc(100vh - 270px);
-      }
-
-      .body {
-        max-height: calc(100vh - 270px);
-      }
-
-      #openBtn {
-        bottom: 14px;
-        right: 400px;
-      }
+      transform: none;
     }
   </style>
 </head>
 
 <body>
-
   <div id="app">
-    <iframe src="https://pictoblox.ai/" title="PictoBlox"></iframe>
+    <iframe src="https://pictoblox.ai/" title="PictoBlox Studio"></iframe>
   </div>
 
-  <button id="openBtn" onclick="openTut()">📘 Öğrenme Rehberi</button>
+  <button id="openBtn" style="display:none;">
+    <span>🚀</span> Rehberi Aç
+  </button>
 
-  <div id="tutorial" role="dialog" aria-label="Artificial Intelligence in Robotics (Robotik AI) Öğrenme Rehberi">
+  <div id="tutorial">
     <div class="resize-handle" id="resizeHandle"></div>
-    <div class="bar" id="dragBar">
+
+    <div class="bar" id="dragHeader">
       <div class="bar-title">
         <span>🤖</span>
         <div>
-          <strong>Artificial Intelligence in Robotics (Robotik AI)</strong>
-          <small>Kitap 2 Öğrenme Patikası · 39. Adım</small>
+          <strong>PictoBlox · Adım 39</strong>
+          <small>ML with Teachable Machine</small>
         </div>
       </div>
-      <button class="close" onclick="closeTut()" aria-label="Kapat">✕</button>
+      <button class="close" id="closeBtn" title="Kapat">✕</button>
     </div>
 
     <div class="progress-wrap">
       <div class="progress-label">
-        <span id="stepLabel">1 / 3 · Tanıtım</span>
-        <span id="progressText">%33</span>
+        <span id="stepCounter">Adım 1 / 3</span>
+        <span id="stepPercent">%33</span>
       </div>
       <div class="progress">
         <div id="progressBar"></div>
@@ -529,206 +490,193 @@
     </div>
 
     <div class="body">
-      <!-- 1. ADIM: Konuya genel bir giriş / tanıtım / önbilgi -->
-      <section class="slide active" data-name="Tanıtım & Önbilgi">
-        <div class="eyebrow">1. ADIM · GENEL GİRİŞ VE ÖNBİLGİ</div>
+      <!-- SLIDE 1 -->
+      <div class="slide active" data-slide="1">
+        <span class="eyebrow">📍 ADIM 1/3 · Genel Giriş</span>
         <div class="icon">🤖</div>
-        <h3>Robotik Sistemlerde Yapay Zeka Nasıl Kullanılır?</h3>
-        <p>Bu projede yapay zeka algoritmalarını robotik kartlar ve motor sensörleri ile entegre ederek akıllı robot kontrolü sağlayacaksın.</p>
+        <h3>Teachable Machine İle Model Eğitimi</h3>
+        <p>Kod yazmadan görsel, ses ve poz modellerinizi eğitip PictoBlox'a aktarmanızı sağlayan platform.</p>
+
         <div class="mini-list">
           <div class="mini-item">
-            <span>🤖</span>
-            <div><b>Akıllı Robot Mantığı:</b> Kamera ve mesafe sensörlerinden gelen verilerle karar verme.</div>
+            <span>📸</span>
+            <div>
+              <strong>Veri Toplama:</strong>
+              Örnek görseller çekme.
+            </div>
           </div>
           <div class="mini-item">
-            <span>🛣️</span>
-            <div><b>Engelden Kaçma:</b> Yapay zeka engeli tanıdığında robot yönünün değişmesi.</div>
+            <span>⚙️</span>
+            <div>
+              <strong>Model Eğitimi:</strong>
+              Yapay zekayı eğitme.
+            </div>
           </div>
           <div class="mini-item">
-            <span>🎮</span>
-            <div><b>Kablosuz Kontrol:</b> Görsel ve sesli komutlarla robotu uzaktan yönetme.</div>
+            <span>🔗</span>
+            <div>
+              <strong>PictoBlox Entegrasyonu:</strong>
+              Modeli blok kodlara bağlama.
+            </div>
           </div>
         </div>
-        <div class="highlight">
-          🎯 <b>Hedef:</b> Robotik kodlama ve yapay zeka entegrasyonunun temel bloklarını kavrama.
-        </div>
-      </section>
 
-      <!-- 2. ADIM: Kitabın ilgili sayfasını referans ver -->
-      <section class="slide" data-name="Kitap Referansı">
-        <div class="eyebrow">2. ADIM · KİTAP 2 REFERANSI (SAYFA 330)</div>
-        <div class="icon">📖</div>
-        <h3>Kitabını Aç ve Uygulama Adımlarını Takip Et</h3>
+        <div class="highlight">
+          🎯 <strong>Hedef:</strong> Kendi yapay zeka modelinizi eğitip kullanma mantığını kavrama.
+        </div>
+      </div>
+
+      <!-- SLIDE 2 -->
+      <div class="slide" data-slide="2">
+        <span class="eyebrow">📖 ADIM 2/3 · Kitap Takibi</span>
+        <div class="icon">📚</div>
+        <h3>Kitap İle Uygulama Adımları</h3>
+        <p>Aşağıda belirtilen kitap sayfasını açarak PictoBlox uygulamasındaki blok kodlama adımlarını sırasıyla takip ediniz.</p>
 
         <div class="book-card">
-          <div class="page">📌 Kitap 2 Referansı · Sayfa 330</div>
-          <h4>Artificial Intelligence in Robotics (Robotik AI)</h4>
-          <p>
-            Kitabının <b>Sayfa 330</b> bölümünde yer alan adımları sırayla inceleyip PictoBlox üzerinde uygulayabilirsin.
-          </p>
+          <h4>📌 Kitap Referansı</h4>
+          <p>Ders Kitabı · Sayfa 253</p>
         </div>
-      </section>
+      </div>
 
-      <!-- 3. ADIM: Şifre bölümünü yaz -->
-      <section class="slide" data-name="Bölüm Şifresi">
-        <div class="eyebrow">3. ADIM · BÖLÜM ŞİFRESİ</div>
-        <h3>Proje Tamamlama Şifresi</h3>
+      <!-- SLIDE 3 -->
+      <div class="slide" data-slide="3">
+        <span class="eyebrow">🔑 ADIM 3/3 · Proje Tamamlama</span>
+        <div class="icon">🏆</div>
+        <h3>Tebrikler! Projeyi Tamamladın</h3>
+        <p>Projeni tamamladıktan sonra Talent14 platformunda adımı geçmek için aşağıdaki bölüm şifresini ilgili alana giriniz.</p>
 
-        <div class="password-card">
-          <div class="password-title">🔒 39. Adım Tamamlama Şifresi</div>
-          <div class="password-box">robotics</div>
-          <p class="password-note">Bu şifreyi ana sistemdeki doğrulama alanına yazarak bölümü tamamlayabilirsiniz.</p>
+        <div class="password-box">
+          <p style="font-size:13px; color:#6c5ce7; font-weight:700;">BÖLÜM ŞİFRESİ</p>
+          <div class="password-badge">teachable</div>
+          <p style="font-size:12px; color:#b2bec3;">Bu şifreyi Talent14 ekranındaki soru simgesine tıklayarak giriniz.</p>
         </div>
-      </section>
+      </div>
     </div>
 
-    <div class="nav">
-      <button class="arrow" id="prev" onclick="go(-1)" aria-label="Önceki">&lsaquo;</button>
-      <div class="dots" id="dots"></div>
-      <button class="arrow" id="next" onclick="go(1)" aria-label="Sonraki">&rsaquo;</button>
+    <div class="foot">
+      <button class="btn btn-secondary" id="prevBtn" disabled>← Geri</button>
+      <button class="btn btn-primary" id="nextBtn">İleri →</button>
     </div>
   </div>
 
   <script>
-    const tut = document.getElementById('tutorial');
-    const slides = document.querySelectorAll('.slide');
-    const dotsWrap = document.getElementById('dots');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const progressBar = document.getElementById('progressBar');
-    const progressText = document.getElementById('progressText');
-    const stepLabel = document.getElementById('stepLabel');
-    let cur = 0;
-
-    slides.forEach((_, i) => {
-      const d = document.createElement('div');
-      d.className = 'dot' + (i === 0 ? ' active' : '');
-      d.onclick = () => show(i);
-      dotsWrap.appendChild(d);
-    });
-
-    const dots = document.querySelectorAll('.dot');
-
-    function show(i) {
-      cur = i;
-      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
-      dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
-      prevBtn.disabled = (i === 0);
-      nextBtn.disabled = (i === slides.length - 1);
-
-      const progress = Math.round(((i + 1) / slides.length) * 100);
-      progressBar.style.width = progress + '%';
-      progressText.textContent = '%' + progress;
-      stepLabel.textContent = `${i + 1} / ${slides.length} · ${slides[i].dataset.name}`;
-    }
-
-    function go(dir) {
-      const n = cur + dir;
-      if (n >= 0 && n < slides.length) show(n);
-    }
-
-    function openTut() {
-      tut.style.display = 'flex';
-    }
-
-    function closeTut() {
-      tut.style.display = 'none';
-    }
-
-    show(0);
-
-    const bar = document.getElementById('dragBar');
+    const tutorial = document.getElementById('tutorial');
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    const dragHeader = document.getElementById('dragHeader');
     const resizeHandle = document.getElementById('resizeHandle');
-    let dragging = false, resizing = false;
-    let ox = 0, oy = 0, startWidth = 0, startX = 0;
 
-    bar.addEventListener('mousedown', e => {
-      if (e.target.closest('button')) return;
-      dragging = true;
-      ox = e.clientX - tut.offsetLeft;
-      oy = e.clientY - tut.offsetTop;
-      document.body.style.userSelect = 'none';
-      document.body.classList.add('dragging');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBar = document.getElementById('progressBar');
+    const stepCounter = document.getElementById('stepCounter');
+    const stepPercent = document.getElementById('stepPercent');
+
+    let currentSlide = 1;
+    const totalSlides = 3;
+
+    function updateSlide() {
+      slides.forEach(s => s.classList.remove('active'));
+      document.querySelector(`.slide[data-slide="${currentSlide}"]`).classList.add('active');
+
+      prevBtn.disabled = (currentSlide === 1);
+
+      if (currentSlide === totalSlides) {
+        nextBtn.textContent = "Tamamlandı 🎉";
+        nextBtn.style.background = "linear-gradient(135deg, #2ecc71, #1abc9c)";
+      } else {
+        nextBtn.textContent = "İleri →";
+        nextBtn.style.background = "linear-gradient(135deg, #6c5ce7, #a55eea)";
+      }
+
+      const pct = Math.round((currentSlide / totalSlides) * 100);
+      progressBar.style.width = pct + "%";
+      stepCounter.textContent = `Adım ${currentSlide} / ${totalSlides}`;
+      stepPercent.textContent = `%${pct}`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      } else {
+        tutorial.style.display = 'none';
+        openBtn.style.display = 'inline-flex';
+      }
     });
 
-    resizeHandle.addEventListener('mousedown', e => {
-      resizing = true;
-      startWidth = tut.offsetWidth;
+    prevBtn.addEventListener('click', () => {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    });
+
+    closeBtn.addEventListener('click', () => {
+      tutorial.style.display = 'none';
+      openBtn.style.display = 'inline-flex';
+    });
+
+    openBtn.addEventListener('click', () => {
+      tutorial.style.display = 'flex';
+      openBtn.style.display = 'none';
+    });
+
+    // Dragging
+    let isDragging = false, startX, startY, initialLeft, initialTop;
+
+    dragHeader.addEventListener('mousedown', (e) => {
+      if (e.target === closeBtn) return;
+      isDragging = true;
+      document.body.classList.add('dragging');
       startX = e.clientX;
-      document.body.style.userSelect = 'none';
-      document.body.style.cursor = 'ew-resize';
-      document.body.classList.add('dragging');
+      startY = e.clientY;
+      const rect = tutorial.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
     });
 
-    bar.addEventListener('touchstart', e => {
-      if (e.target.closest('button')) return;
-      const touch = e.touches[0];
-      dragging = true;
-      ox = touch.clientX - tut.offsetLeft;
-      oy = touch.clientY - tut.offsetTop;
-      document.body.classList.add('dragging');
-    }, { passive: true });
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      tutorial.style.left = `${initialLeft + dx}px`;
+      tutorial.style.top = `${initialTop + dy}px`;
+    });
 
-    resizeHandle.addEventListener('touchstart', e => {
-      resizing = true;
-      startWidth = tut.offsetWidth;
-      startX = e.touches[0].clientX;
-      document.body.classList.add('dragging');
-    }, { passive: true });
-
-    document.addEventListener('mousemove', e => {
-      if (dragging) {
-        let x = e.clientX - ox;
-        let y = e.clientY - oy;
-
-        x = Math.max(0, Math.min(x, window.innerWidth - tut.offsetWidth));
-        y = Math.max(0, Math.min(y, window.innerHeight - tut.offsetHeight));
-
-        tut.style.left = x + 'px';
-        tut.style.top = y + 'px';
-      } else if (resizing) {
-        const width = startWidth + (e.clientX - startX);
-        if (width >= 280 && width <= window.innerWidth * 0.95) {
-          tut.style.width = width + 'px';
-        }
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        document.body.classList.remove('dragging');
       }
     });
 
-    document.addEventListener('touchmove', e => {
-      if (!dragging && !resizing) return;
-      const touch = e.touches[0];
+    // Resizing
+    let isResizing = false, resizeStartX, resizeStartWidth;
 
-      if (dragging) {
-        let x = touch.clientX - ox;
-        let y = touch.clientY - oy;
-
-        x = Math.max(0, Math.min(x, window.innerWidth - tut.offsetWidth));
-        y = Math.max(0, Math.min(y, window.innerHeight - tut.offsetHeight));
-
-        tut.style.left = x + 'px';
-        tut.style.top = y + 'px';
-      } else if (resizing) {
-        const width = startWidth + (touch.clientX - startX);
-        if (width >= 280 && width <= window.innerWidth * 0.95) {
-          tut.style.width = width + 'px';
-        }
-      }
-    }, { passive: true });
-
-    document.addEventListener('mouseup', () => {
-      dragging = false;
-      if (resizing) {
-        resizing = false;
-        document.body.style.cursor = '';
-      }
-      document.body.style.userSelect = '';
-      document.body.classList.remove('dragging');
+    resizeHandle.addEventListener('mousedown', (e) => {
+      isResizing = true;
+      document.body.classList.add('dragging');
+      resizeStartX = e.clientX;
+      resizeStartWidth = tutorial.offsetWidth;
+      e.preventDefault();
     });
 
-    document.addEventListener('touchend', () => {
-      dragging = false;
-      resizing = false;
-      document.body.classList.remove('dragging');
+    window.addEventListener('mousemove', (e) => {
+      if (!isResizing) return;
+      const w = resizeStartWidth + (e.clientX - resizeStartX);
+      if (w >= 320 && w <= 800) {
+        tutorial.style.width = `${w}px`;
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isResizing) {
+        isResizing = false;
+        document.body.classList.remove('dragging');
+      }
     });
   </script>
 </body>
